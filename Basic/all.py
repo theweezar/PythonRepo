@@ -54,7 +54,12 @@ print(f"sqrt: {int(math.sqrt(number))}")
 
 # String process ( các phương thức để xử lý chuỗi)
 string = "Hoang Phan Minh Duc"
-
+print(f"string.join('abc'): {string.join('abc')}")
+print(f"string.split(' '): {string.split(' ')}")
+# Replace 1 lần
+print(f"string.replace('n','z',1): {string.replace('n','z',1)}")
+# Replace tất cả chữ "n"
+print(f"string.replace('n','z'): {string.replace('n','z')}")
 
 # Cách pause màn hình bằng cách dùng input() nó giống getch() bên C
 input()
