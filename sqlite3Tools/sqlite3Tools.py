@@ -14,9 +14,19 @@ class SQlite3:
     else:
       print("Database file isn't exist !")
   
-  def CreateTable(self):
-    print("d")
+  def createTable(self,props):
+    command = """CREATE TABLE"""
+    print(props)
 
 db = SQlite3("fuck")
+db.createTable({
+  "tbName":"User",
+  "columns":[
+    {
+      "clName":"username",
+      "keywords":["unique"]
+    }
+  ]
+})
 
 input()
