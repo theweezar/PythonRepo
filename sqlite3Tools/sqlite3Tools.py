@@ -11,22 +11,20 @@ class SQlite3:
     # Check if file exist - if exist connect to that database file, if not show the error
     if (os.path.isfile(self.dbName)):
       self.conn = sqlite3.connect(self.dbName)
+      self.cursor = self.conn.cursor()
     else:
       print("Database file isn't exist !")
+  def command(self,command=""):
+    self.cursor.execute(command)
+    self.conn.commit()
   
-  def createTable(self,props):
-    command = """CREATE TABLE"""
-    print(props)
-
+  
+  
 db = SQlite3("fuck")
-db.createTable({
-  "tbName":"User",
-  "columns":[
-    {
-      "clName":"username",
-      "keywords":["unique"]
-    }
-  ]
-})
-
+db.command("""CREATE TABLE user(
+  ID INT PRIMARY KEY,
+  USERNAME TEXT NOT NULL UNIQUE,
+  PASSWORD TEXT NOT NULL
+);""")
+# db.command("PRAGMA table_info(user);")
 input()
