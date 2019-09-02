@@ -18,6 +18,9 @@ from django.urls import path, include
 
 urlpatterns = [
     # path('',)
-    path('admin/', admin.site.urls),
-    path('polls/', include('polls.urls'))
+    # Mỗi phần tử path trong này sẽ là dạng app nhỏ
+    path('admin/', admin.site.urls), # localhost:PORT/admin/ -> nó sẽ đẩy ta vào 1 cái app quản lý database
+    path('', include('polls.urls')) # localhost:PORT -> nó sẽ đẩy ta vào 1 cái app trong folder polls. nó sẽ
+    # vào file polls/url.py để load xem PORT/... sẽ là cái gì, đúng phương thức nào thì sẽ chạy phương thức đó.
+    
 ]
