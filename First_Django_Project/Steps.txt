@@ -1,0 +1,7 @@
+Tutorial on Django Website
+
+Tutorial part 1: Setup your app. How the Django app works.
+
+Tutorial part 2: Setup your database. How to use admin\ site
+
+ 
