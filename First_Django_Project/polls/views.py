@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import User,Post
 
 # Create your views here.
@@ -26,5 +26,8 @@ def tableuser(request):
 
 def createuser(request):
   if request.method == "POST":
-    new_username = request.POST.get("username")
-    return HttpResponse(f"<h1>{new_username}<h1>")
+    new_username = request.POST.get("username") # input phải có name = "username" thì mới nhận
+    new_password = request.POST.get("password")
+    new_user = User(username = new_username,password = new_password)
+    new_user.save() # 1 dạng commit trên database
+    return redirect(tableuser) # chuyển hướng về view tableuser

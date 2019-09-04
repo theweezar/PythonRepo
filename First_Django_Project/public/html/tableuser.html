@@ -51,7 +51,6 @@
     </tr>
     {% endfor %}
   </table>
-  {% csrf_token %}
   <script>
     window.onload = function(){
       document.getElementById("add").addEventListener("click",() => {
@@ -66,8 +65,10 @@
             ip_username.value = username;
             ip_password.value = password;
             const form = document.createElement("form");
+            form.style.display = "none"; // add vào body nhưng ko cho hiện lên
             form.action = "/createuser";
             form.method = "POST";
+            form.innerHTML += `{% csrf_token %}`; // Cross-Site Request Forgery - middleware protection
             form.append(ip_username);
             form.append(ip_password);
             document.querySelector("body").appendChild(form); 
