@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Table Users</title>
+  <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    table{
+      margin-top: 2%;
+      position: relative;
+      width: 50%;
+      border-collapse: collapse;
+    }
+    table th,td{
+      border: 1px solid black;
+      padding: 10px 15px;
+    }
+    #add{
+      background: turquoise;
+      border-radius: 25px;
+      padding: 10px 25px;
+      margin-top: 2%;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="add">Add</div>
+  <table>
+    <tr>
+      <th>Username</th>
+      <th>Password</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+      <td>{{user.username}}</td>
+      <td>{{user.password}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% csrf_token %}
+  <script>
+    window.onload = function(){
+      document.getElementById("add").addEventListener("click",() => {
+        const username = prompt("New username: ");
+        const password = prompt("New password: ");
+        if (username != null && password != null){
+          if (confirm("Are you sure ?")){
+            const ip_username = document.createElement("input");
+            const ip_password = document.createElement("input");
+            ip_username.name = "username";
+            ip_password.name = "password";
+            ip_username.value = username;
+            ip_password.value = password;
+            const form = document.createElement("form");
+            form.action = "/createuser";
+            form.method = "POST";
+            form.append(ip_username);
+            form.append(ip_password);
+            document.querySelector("body").appendChild(form); 
+            // Phải append nó vào body thì nó mới cho submit ở dưới, ko thì sẽ báo lỗi
+            form.submit();
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
