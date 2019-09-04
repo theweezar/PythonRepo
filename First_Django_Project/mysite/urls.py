@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # path('',)
@@ -23,4 +25,4 @@ urlpatterns = [
     path('', include('polls.urls')) # localhost:PORT -> nó sẽ đẩy ta vào 1 cái app trong folder polls. nó sẽ
     # vào file polls/url.py để load xem PORT/... sẽ là cái gì, đúng phương thức nào thì sẽ chạy phương thức đó.
     
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

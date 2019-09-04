@@ -6,11 +6,15 @@ from django.http import HttpResponse
 from django.template import loader
 
 def index(request):
-  # return HttpResponse("<h1>Hello, world. You're at the polls index</h1>")
   return render(request,"homepage.html")
 
-def another(request):
-  return HttpResponse("<h1>This is another page</h1>")
+def flow(request):
+  myname = "Mr.Duck"
+  return render(request,"flow.html",{"myname":myname})
+
+def name(request,name):
+  return HttpResponse(f"""<h1>You just use the GET method to request. 
+                          The DATA is <span style='color:red'>{name}</span></h1>""")
 
 def html(request):
   return render(request,"homepage.html")
