@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import math
 import matplotlib.pyplot as plt
 
 
@@ -8,33 +9,35 @@ data = pd.read_csv("data_linear.csv")
 # data.values sẽ return lại 1 Array gôm các phần tử trong đó theo dạng [][]
 print("App is running")
 
+print(data.values)
+
+x = data.values[0][0]
+y = data.values[0][1]
+
+# data.shape = (hàng,cột) bên trong file dữ liệu có sẵn
+# trong bài này thì có 30 hàng và 2 cột (giá,diện tích)
+
 N = data.shape[0]
-x = data[:, 0].reshape(-1, 1)
-y = data[:, 1].reshape(-1, 1)
-plt.scatter(x, y)
-plt.xlabel('mét vuông')
-plt.ylabel('giá')
+# điểm ngẫu nhiên cho trước
+w1 = 1
+w0 = 0
 
-x = np.hstack((np.ones((N, 1)), x))
+# sai số cao nhất là +-1
+AllowedJ = 1
 
-w = np.array([0.,1.]).reshape(-1,1)
+learning_rate = 0.00001
 
-numOfIteration = 100
-cost = np.zeros((numOfIteration,1))
-learning_rate = 0.000001
-for i in range(1, numOfIteration):
-    r = np.dot(x, w) - y
-    cost[i] = 0.5*np.sum(r*r)
-    w[0] -= learning_rate*np.sum(r)
-    # correct the shape dimension
-    w[1] -= learning_rate*np.sum(np.multiply(r, x[:,1].reshape(-1,1)))
-    print(cost[i])
-predict = np.dot(x, w)
-plt.plot((x[0][1], x[N-1][1]),(predict[0], predict[N-1]), 'r')
-plt.show()
+allow = False
+# Đầu tiên ta giữ w0 và tăng w1
+while not allow:
+  tong = 0
+  for d in data.values:
+    tong += 0.5 * math.pow((w1 * d[0] - d[1]),2)  
+  J = tong * 1 / N
+  if J < AllowedJ:
+    allow = True
+    print(J)
+    print(w1)
 
-x1 = 50
-y1 = w[0] + w[1] * 50
-print('Giá nhà cho 50m^2 là : ', y1)
 
 input()
