@@ -15,10 +15,10 @@ print(f"\nb (Row = {b.shape[0]} and Column = {b.shape[1]})")
 # Nó hoạt động khá giống mảng 2 chiều
 print(f"\nb[1][2] = {b[1][2]}")
 
-# lấy nguyên 1 cái hàng
+# lấy nguyên 1 cái hàng thứ 0
 print(f"\nFirst row of b = {b[0,:]}")
 
-# lấy nguyên 1 cái cột
+# lấy nguyên 1 cái cột thứ 0
 print(f"\nFirst column of b = {b[:,0]}")
 
 # get phân tử nhỏ nhất trong ma trận
@@ -50,7 +50,10 @@ print(fullMatrix)
 # phương thức nhân 2 ma trận lại với nhau, trong trường hợp này a x c 
 # số cột của a phải bằng số hàng của c, nếu ko thì nó sẽ báo lỗi
 abMul = np.matmul(a,c) 
-print(f"\nabMul: {abMul}")
+print(f"\nabMul: {abMul}") # => Array
+
+abDot = np.dot(a,c) 
+print(f"\nabDot: {abDot}") # => Tuple
 
 # phương thức vstack (push theo hàng) - tức là add thêm nhiều hàng, nhưng những hàng đó phải giống nhau
 # về mặt cấu trúc
