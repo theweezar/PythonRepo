@@ -47,8 +47,9 @@ print(zeroMatrix)
 fullMatrix = np.full((3,4),5)
 print(fullMatrix)
 
-# phương thức nhân 2 ma trận lại với nhau, trong trường hợp này a x c 
-# số cột của a phải bằng số hàng của c, nếu ko thì nó sẽ báo lỗi
+# phương thức nhân 2 ma trận lại với nhau sau đó cộng hết tất cả phần tử trong 1 cột lại vs nhau, 
+# trong trường hợp này a x c số cột của a phải bằng số hàng của c, nếu ko thì nó sẽ báo lỗi
+
 abMul = np.matmul(a,c) 
 print(f"\nabMul: {abMul}") # => Array
 
@@ -74,3 +75,7 @@ hAll = np.hstack((b,p))
 print(f"\nhAll: {hAll}")
 
 input()
+
+# phép toán ma trận có những trường hợp không thể tính được - ví a * b
+# 
+# - 

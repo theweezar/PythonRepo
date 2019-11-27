@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import os
+import math
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("data_linear.csv")
@@ -18,33 +18,38 @@ y = data.values[:,1].reshape((-1,1))
 print(f"\nx: \n{x}\n")
 # print(f"y: {y}")
 
-xMatrix = np.hstack((np.zeros((N,1)),x))
+xMatrix = np.hstack((np.ones((N,1)),x))
+yMatrix = np.hstack((y,np.zeros((N,1))))
 
 print(f"\nxMatrix: \n{xMatrix}\n")
+print(f"\nyMatrix: \n{yMatrix}\n")
+
 
 # w0 = 0, w1 = 1
-w = np.array([0,1]).reshape(-1,1)
+w = np.array([0,1])
 print(f"\nFirst const: \n{w}\n")
 
-i = 100
+iTerate = 100
 
-learning_rate = 0.000001
+learning_rate = 0.0001
 
-cost = np.zeros((i,1))
+# r = np.sum(w * xMatrix)
 
-for i in range(1,i):
-  r = np.dot(x,w) - y
-  cost[i] = 0.5 * np.sum(r*r)
-  w[0] -= learning_rate * np.sum(r)
-  w[1] -= learning_rate * np.sum(np.matmul(r,x[:,1].reshape((-1,1))))
-  print(cost[i])
+r = w * xMatrix - yMatrix
+print(f"r: \n{r}\n")
+print(f"Sum r : {np.sum(r)}\n")
 
-predict = np.dot(x,w)
+while True:
+  r = w * xMatrix - yMatrix
+  J = 0.5 * math.pow(np.sum(r),2)
+  w[0] += 5
+  w[1] += 5 
+  print(w)
+  print(J)
+  if J < 10:
+    break
 
-x1 = 50
-y1 = w[0] + w[1] * 50
 
-print(f"\nThe price is {y1}")
 
 # need to debug 
 
