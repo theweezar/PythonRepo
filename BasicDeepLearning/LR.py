@@ -5,6 +5,8 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
+# ta dùng công thức MSE 
+
 data = pd.read_csv("data_linear.csv")
 print(data.values)
 # data ở đây là 1 class Object, không phải là list
@@ -19,6 +21,10 @@ N = data.shape[0]
 x = data.values[:,0].reshape((-1,1))
 # dữ liệu giá nhà thực tế
 y = data.values[:,1].reshape((-1,1))
+
+plt.scatter(x, y)
+plt.xlabel('Meter')
+plt.ylabel('Price')
 
 print(f"\nx: \n{x}\n")
 print(f"\ny: \n{y}\n")
@@ -38,41 +44,56 @@ print(f"\nyMatrix: \n{yMatrix}\n")
 
 
 # w0 = 0, w1 = 1
-w = np.array([0,1])
+w = np.array([0, 1])
 print(f"\nFirst const: \n{w}\n")
 
-iTerate = 10
+iTerate = 300
 
 learning_rate = 0.0001
 
-# r = np.sum(w * xMatrix)
+cost = np.hstack((np.zeros((iTerate,1))))
 
-for i in range(1,iTerate):
-  r = w * xMatrix - yMatrix
-  print(f"r: \n{r}\n")
-  print(f"\nSum abs(r) : {abs(np.sum(r))}\n")
+# print(np.sum(y) / N)
 
+for i in range(0,iTerate):
+  # r = w * xMatrix - yMatrix
+  yP = (w[0] + x * w[1])
+  cost[i] = np.sum(yP) / N
+  r = y - yP
+  # print(f"y & yP: \n {np.hstack((y,yP))}\n")
+  # print(f"r: \n{r}\n")
+  # print(f"\nSum abs(r) : {abs(np.sum(r))}\n")
+  # print(f"\nSum (r * x) : {np.sum(r * x)}\n")
 # theo công thức trên mạng thì Loss phải nhân thêm 0.5
-  Loss = 0.5 * math.pow(np.sum(r),2) / N
+  loss = np.sum(r * r) / N
   # Loss = 0.5 * abs(np.sum(r)) / N
 
-  print(f"\nLoss: {Loss}\n")
+  print(f"\nLoss: {loss}\n")
 
   before_w0 = w[0]
 
-  w[0] += abs(-(np.sum(r[:,1] - y) / N)) * learning_rate
-  # w[0] += abs(np.sum(r) * learning_rate / N)
-  # w[1] += ((np.sum(y) - N * before_w0) / np.sum(x)) * learning_rate 
-  w[1] += abs(np.sum(x * r) * learning_rate / N)
+  w[0] -= -2 / N * np.sum(r) * learning_rate
+  w[1] -= -2 / N * np.sum(r * x) * learning_rate
+
   print(f"\nw after: {w}\n")
 
-S = data.values[5][0]
+# S = data.values[15][0]
 
-P = w[1] * S + w[0]
+# P = w[1] * S + w[0]
 
-print(f"\nReality price of S = {S} is {data.values[5][1]}\n")
-print(f"\nPredicted price of S = {S} is {P}\n")
+# print(f"\nReality price of S = {S} is {data.values[15][1]}\n")
+# print(f"\nPredicted price of S = {S} is {P}\n")
 
-# need to debug 
+for i in range(0,N):
+  S = data.values[i][0]
+  P = w[1] * S + w[0]
+  print(f"\nReality price of S{i+1} = {S} is {data.values[i][1]}")
+  print(f"\nPredicted price of S{i+1} = {S} is {P}\n")
+
+predict = x * w[1] + w[0]
+
+# plt.plot((x.begin,x.end),(y.begin,y.end),'màu') vẽ đường thẳng - r: red
+plt.plot((x[0],x[N-1]),(predict[0],predict[N - 1]),'r') 
+plt.show() 
 
 input()
