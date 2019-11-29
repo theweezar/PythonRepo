@@ -51,14 +51,14 @@ iTerate = 300
 
 learning_rate = 0.0001
 
-cost = np.hstack((np.zeros((iTerate,1))))
+# cost = np.hstack((np.zeros((iTerate,1))))
 
 # print(np.sum(y) / N)
 
 for i in range(0,iTerate):
   # r = w * xMatrix - yMatrix
   yP = (w[0] + x * w[1])
-  cost[i] = np.sum(yP) / N
+  # cost[i] = np.sum(yP) / N
   r = y - yP
   # print(f"y & yP: \n {np.hstack((y,yP))}\n")
   # print(f"r: \n{r}\n")
