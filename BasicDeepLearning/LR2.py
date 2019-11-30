@@ -5,47 +5,50 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt 
 
+def sigmoid(z):
+  return 1 / (1 + np.exp(-z))
+
 data = pd.read_csv("dataset.csv")
 
 N = data.shape[0]
 
 # khởi tạo x,y trong database
-x = data.values[:,0:2]
+# x (thời gian làm việc: x1 - lương: x2)
+x = np.hstack((np.ones((N,1)),data.values[:,0:2]))
+# y (được vậy hay không 1 | 0)
 y = data.values[:,2].reshape((-1,1))
 w = np.array([0,0.1,0.1])
 
 # print(data.values)
 
-print(f"x[0,1]: \n{x}\n")
+print(f"x[1,x1,x2]: \n{x}\n")
 print(f"y: \n{y}\n")
+print(f"w[w0,w1,w2]: {w}\n")
 
 learning_rate = 0.001
-iTerate = 10
+iTerate = 1
 
 for i in range(0,iTerate):
-  yP = 1 / (1 + np.exp(-(w[0] + w[1] * x[:,0] + w[2] * x[:,1])))
-  yP = np.reshape(yP,(-1,1))
-  # print(f"yP : \n{yP}\n")
-  L = -(y * np.log(yP) + (1 - y) * np.log(1 - yP))
+  # lấy w[0] + x1*w[1] + x2*w[2] rồi sau đó cộng lại hết với nhau theo từng hàng, rồi bỏ
+  # vào hàm sigmoid để yP dc trả về là 1 ma trận
+  yP = sigmoid(np.sum(w * x,axis=1).reshape(-1,1))
+  print(f"yP : \n{yP}\n")
+  
   # print(f"L : \n{L}\n")
   # print(f"sum(L) : {np.sum(L)}\n")
 
-  w[0] += np.sum(yP - y) * learning_rate
-  w[1] += np.sum(x[:,0] * (yP - y)) * learning_rate 
-  w[2] += np.sum(x[:,1] * (yP - y)) * learning_rate
-
-  # w[0] += learning_rate * -np.sum(y * yP * (1 - yP) / yP * math.log(10,math.e) + (1 - y) * (- yP * (1 - yP)) / (1 - yP) * math.log(10,math.e))
-  # w[1] += learning_rate * -np.sum(y * x[:,0] * yP * (1 - yP) / yP * math.log(10,math.e) + (1 - y) * (- yP * x[:,0] * (1 - yP)) / (1 - yP) * math.log(10,math.e))
-  # w[2] += learning_rate * -np.sum(y * x[:,1] * yP * (1 - yP) / yP * math.log(10,math.e) + (1 - y) * (- yP * x[:,1] * (1 - yP)) / (1 - yP) * math.log(10,math.e))
+  # w[0] += np.sum(yP - y) * learning_rate
+  # w[1] += np.sum(x[:,0] * (yP - y)) * learning_rate 
+  # w[2] += np.sum(x[:,1] * (yP - y)) * learning_rate
   
-print(f"w after: {w}\n")
+# print(f"w after: {w}\n")
 
-salary = 1
-hour = 3
+# salary = 1
+# hour = 3
 
-yP = 1 / (1 + math.exp(-(w[0] + w[1] * salary + w[2] * hour)))
+# yP = 1 / (1 + math.exp(-(w[0] + w[1] * salary + w[2] * hour)))
 
-print(f"\nPredited: {yP}\n")
+# print(f"\nPredited: {yP}\n")
 
 # plt.scatter(x,y)
 # plt.xlabel('Kinh nghiệm (năm)')
