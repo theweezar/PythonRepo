@@ -64,7 +64,6 @@ for i in range(0,iTerate):
   # print(f"r: \n{r}\n")
   # print(f"\nSum abs(r) : {abs(np.sum(r))}\n")
   # print(f"\nSum (r * x) : {np.sum(r * x)}\n")
-# theo công thức trên mạng thì Loss phải nhân thêm 0.5
   loss = np.sum(r * r) / N
   # Loss = 0.5 * abs(np.sum(r)) / N
 
@@ -94,6 +93,6 @@ predict = x * w[1] + w[0]
 
 # plt.plot((x.begin,x.end),(y.begin,y.end),'màu') vẽ đường thẳng - r: red
 plt.plot((x[0],x[N-1]),(predict[0],predict[N - 1]),'r') 
-plt.show() 
+# plt.show() 
 
 input()
