@@ -25,30 +25,31 @@ print(f"x[1,x1,x2]: \n{x}\n")
 print(f"y: \n{y}\n")
 print(f"w[w0,w1,w2]: {w}\n")
 
-learning_rate = 0.001
-iTerate = 1
+learning_rate = 0.01
+iTerate = 1000
 
 for i in range(0,iTerate):
   # lấy w[0] + x1*w[1] + x2*w[2] rồi sau đó cộng lại hết với nhau theo từng hàng, rồi bỏ
   # vào hàm sigmoid để yP dc trả về là 1 ma trận
   yP = sigmoid(np.sum(w * x,axis=1).reshape(-1,1))
-  print(f"yP : \n{yP}\n")
+  # print(f"yP : \n{yP}\n")
+
+  loss = (-1 / N) * np.sum(y * np.log10(yP) + (1 - y) * np.log10(1 - yP))
   
-  # print(f"L : \n{L}\n")
+  # print(f"Loss : {loss}\n")
   # print(f"sum(L) : {np.sum(L)}\n")
 
-  # w[0] += np.sum(yP - y) * learning_rate
-  # w[1] += np.sum(x[:,0] * (yP - y)) * learning_rate 
-  # w[2] += np.sum(x[:,1] * (yP - y)) * learning_rate
   
-# print(f"w after: {w}\n")
 
-# salary = 1
-# hour = 3
+  
+print(f"w after: {w}\n")
 
-# yP = 1 / (1 + math.exp(-(w[0] + w[1] * salary + w[2] * hour)))
+salary = 10
+hour = 1
 
-# print(f"\nPredited: {yP}\n")
+yP = 1 / (1 + math.exp(-(w[0] + w[1] * salary + w[2] * hour)))
+
+print(f"\nPredited: {yP}\n")
 
 # plt.scatter(x,y)
 # plt.xlabel('Kinh nghiệm (năm)')
