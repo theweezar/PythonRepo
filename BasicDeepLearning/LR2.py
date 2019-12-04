@@ -43,6 +43,8 @@ for i in range(0,iTerate):
   w[0] -= - np.sum(r) * learning_rate 
   w[1] -= - np.sum(x[:,1].reshape((-1,1)) * (r)) * learning_rate
   w[2] -= - np.sum(x[:,2].reshape((-1,1)) * (r)) * learning_rate
+
+  # print(f"x[:,1]: \n{x[:,1]}")
   
 # w *= -1
 print(f"w after: {w}\n")
