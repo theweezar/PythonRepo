@@ -12,60 +12,58 @@ class ImageProcessing:
     # Size of matrix - kích thước ma trận
     self.height = len(self.img)
     self.width = len(self.img[0])
-    # Original RGB channel - channel RGB gốc
-    self.oR = np.array(self.img[:,:,0])
-    self.oG = np.array(self.img[:,:,1])
-    self.oB = np.array(self.img[:,:,2])
-    # Calculated RGB channel - channel RGB sau khi được tính toán
-    self.cR = self.oR
-    self.cG = self.oG
-    self.cB = self.oB
+    self.r, self.g, self.b = cv.split(self.img)
 
   def reset(self):
     # print('After Reset:\n')
-    self.cR = self.oR
-    self.cG = self.oG
-    self.cB = self.oB
+    self.r, self.g, self.b = cv.split(self.img)
     self.rsImg = self.img
     # print(self.cRGB)
 
   def toBlackWhite(self):
-    t = self.cR * 0.299 + self.cG * 0.587 + self.cB * 0.114
-    self.cR = self.cG = self.cB = t
-    self.setResultImage()
+    t = self.r * 0.299 + self.g * 0.587 + self.b * 0.114
+    self.r = self.g = self.b = t
+    self.rsImg = cv.merge((self.r,self.b,self.g))
   
   def toYellow(self):
-    self.cB[:,:] = 255 / 2
-    self.setResultImage()
+    self.b[:,:] = 255 / 2
+    self.rsImg = cv.merge((self.r,self.b,self.g))
 
   def edgeDetection(self):
+    # k = np.array([[],[],[]])
     k = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
     result = cv.filter2D(self.img,0,k)
-    self.setResultImage(rsImg = result)
+    self.rsImg = result
 
-  def setResultImage(self, rsImg = None):
-    if rsImg is None:
-      afterImg = np.hstack((self.cR.reshape((-1,1)),
-                          self.cG.reshape((-1,1)),
-                          self.cB.reshape((-1,1))))
-      afterImg = afterImg.reshape((self.height,self.width,3))
-      self.rsImg = afterImg
-    else:
-      self.rsImg = rsImg
-  
+  def sharpen(self):
+    k = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
+    result = cv.filter2D(self.img,-1,k)
+    self.rsImg = result
+    
   def saveImage(self ,imgName = 'output.jpg'):
     # Tên mặc định của hình là output.jpg
     cv.imwrite(imgName, self.rsImg)
 
-  
+  def drawImage(self,usingCV = True):
+    if usingCV is True:
+      cv.namedWindow('Image',cv.WINDOW_NORMAL)
+      cv.imshow('Image',self.rsImg)
+      if cv.waitKey(0) == 27:
+        cv.destroyAllWindows()
+    else:
+      plt.imshow(self.rsImg)
+      plt.show()
     
 
 img = ImageProcessing('pic.jpg')
 # img.toBlackWhite()
-# img.saveImage('pic_rw_1.jpg')
+# img.saveImage('blackwhite.jpg')
 # img.reset()
 # img.toYellow()
-# img.saveImage('pic_rw_2.jpg')
+# img.saveImage('changed.jpg')
 # img.reset()
-img.edgeDetection()
-img.saveImage('kernel.jpg')
+# img.edgeDetection()
+# img.drawImage()
+# img.saveImage('edge.jpg')
+img.sharpen()
+img.saveImage('sharpen.jpg')
