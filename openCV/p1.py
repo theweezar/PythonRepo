@@ -68,11 +68,11 @@ class ImageProcessing:
       if not ret:
         print("Something went wrong, can't receive frames !")
         break
-      # k = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
+      k = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
       # k = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
-      # result = cv.filter2D(frame,0,k)
-      k = np.ones((3,3))
-      result = cv.morphologyEx(frame, cv.MORPH_GRADIENT, k)
+      result = cv.filter2D(frame,0,k)
+      # k = np.ones((3,3))
+      # result = cv.morphologyEx(frame, cv.MORPH_GRADIENT, k)
       # show frame ra
       cv.imshow('frame', result)
       if cv.waitKey(0) == 27:
@@ -81,8 +81,6 @@ class ImageProcessing:
     cap.release()
     cv.destroyAllWindows()
 
-    
-    
   def saveImage(self ,imgName = 'output.jpg'):
     # Tên mặc định của hình là output.jpg
     cv.imwrite(imgName, self.rsImg)
