@@ -81,6 +81,11 @@ class ImageProcessing:
     cap.release()
     cv.destroyAllWindows()
 
+  def testing(self):
+    k = np.ones((5,5))
+    result = cv.filter2D(self.img,-3,k,delta=2)
+    print(result.shape)
+
   def saveImage(self ,imgName = 'output.jpg'):
     # Tên mặc định của hình là output.jpg
     cv.imwrite(imgName, self.rsImg)
@@ -114,6 +119,8 @@ img = ImageProcessing('pic.jpg')
 # img.kernel(np.array([[0,1,0],[1,-4,1],[0,1,0]]))
 # img.drawImage()
 
-img.onCamera()
+# img.onCamera()
 
 # img.drawImage(False)
+
+img.testing()
