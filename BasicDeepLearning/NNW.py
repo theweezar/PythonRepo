@@ -6,6 +6,10 @@ import pandas as pd
 def sigmode(z):
   return 1 / (1 + np.exp(-z))
 
+# Cách dùng là truyền tham biến là 1 hàm sigmode luôn, chứ ko phải là 1 hàm pt linear
+def dSigmode(z): 
+  return z * (1 - z)
+
 class NeuralNetWork:
   def __init__(self, layers, alphal):
     # super().__init__()
@@ -36,6 +40,16 @@ class NeuralNetWork:
 
     # Backpropagation - tức là đạo hàm ngược lại đi qua từng hidden layer để tìm giá trị nhỏ nhất
     # Sau đó set những giá trị nhỏ nhất cho những hệ số bias
+
+    print(A)
+    print(y)
+
+    dA = y - A[-1]
+    dW = []
+    dB = []
+
+    for i in reversed(range(0, len(self.layers) - 1)):
+      dw = 0 + 2
     
 data = pd.read_csv('dataset.csv').values
 x = data[:,0:2]
