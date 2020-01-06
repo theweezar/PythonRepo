@@ -39,7 +39,7 @@ class DetectSomething:
         tx = int(frame.shape[1] - fx)
     # ==================================
     a = 0
-    path = "hand"
+    path = "D:\\file_cua_a_Duc\\datafortrain\\hand"
     if not os.path.exists(path):
       os.mkdir(path)
     else:
@@ -60,7 +60,8 @@ class DetectSomething:
       if cv.waitKey() == 27:
         break
       elif cv.waitKey() == 32:
-        cv.imwrite(f"hand\\hand{a}.jpg",pFrame)
+        pFrame = cv.resize(pFrame,(200,200))
+        cv.imwrite(f"{path}\\hand{a}.jpg",pFrame)
         a += 1
 
 
