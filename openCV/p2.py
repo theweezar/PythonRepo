@@ -3,9 +3,11 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 import os
+from .HandDetection import HandDetection as HD
 
 class DetectSomething:
   def __init__(self):
+    self.hd = HD()
     self.cameraOn()
 
   def toBlackWhite(self,frame):
@@ -53,6 +55,7 @@ class DetectSomething:
         break
       cv.rectangle(frame,(fx,fy),(tx,ty),(255,0,0))
       pFrame = frame[fy:ty,fx:tx]
+      pFrame = cv.resize(pFrame,(200,200))
       # pFrame = self.toBlackWhite(pFrame)
       # pFrame = self.edgeDetection(pFrame)
       # frame[fy:ty,fx:tx] = pFrame
@@ -60,9 +63,17 @@ class DetectSomething:
       if cv.waitKey() == 27:
         break
       elif cv.waitKey() == 32:
-        pFrame = cv.resize(pFrame,(200,200))
         cv.imwrite(f"{path}\\hand{a}.jpg",pFrame)
         a += 1
+      else:
+        pFrame = cv.cvtColor(pFrame,cv.COLOR_BGR2GRAY)
+        predict = self.hd.predict(pFrame.reshape(1,200,200,1))
+        print(predict)
+        if predict[0][0] >= 0.8:
+          print("Hand detected")
+        else:
+          print("No hand")
 
-
-d = DetectSomething()
+# nếu chạy file này thì chạy cái nào trước - giống main
+if __name__ == "__main__": 
+  d = DetectSomething()

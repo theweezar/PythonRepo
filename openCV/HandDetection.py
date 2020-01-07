@@ -8,14 +8,13 @@ from keras.utils import np_utils
 class HandDetection:
   def __init__(self):
     self.x = self.load_data()
-    self.y = np.ones((self.x.shape[0],1))
+    # self.y = np.ones((self.x.shape[0],1))
+    # [1,0] : vị trí [0] nghĩa là bàn tay, vị trí [1] nghĩa là ko phải
+    self.y = np.hstack((np.ones((self.x.shape[0],1)),np.zeros((self.x.shape[0],1))))
     self.xTrain, self.xVal, self.xTest = self.x[:500], self.x[500:600], self.x[600:700]
     self.yTrain, self.yVal, self.yTest = self.y[:500], self.y[500:600], self.y[600:700]
-    self.yTrain[250] = 0
-    self.yTrain[257] = 0
-    
+    self.model = self.train()
     # print(self.yTrain)
-    self.train()
   
   def load_data(self):
     path = "D:\\file_cua_a_Duc\\datafortrain\\hand"
@@ -32,6 +31,7 @@ class HandDetection:
     return listImg
 
   def train(self):
+    # 500,200,200,1
     self.xTrain = self.xTrain.reshape((self.xTrain.shape[0],200,200,1))
     self.xVal = self.xVal.reshape((self.xVal.shape[0],200,200,1))
     self.xTest = self.xTest.reshape((self.xTest.shape[0],200,200,1))
@@ -39,16 +39,30 @@ class HandDetection:
     # self.yVal = np_utils.to_categorical(self.yVal,1)
     # self.yTest = np_utils.to_categorical(self.yTest,1)
     model = Sequential()
+    # những hàm .add dưới này là add layer vào model để train
     # model.add(Conv2D(32,(3,3),activation = "sigmoid",input_shape = (200,200,1)))
     # model.add(Conv2D(32,(3,3),activation = "sigmoid"))
     # model.add(MaxPooling2D(pool_size=(2,2)))
     model.add(Flatten())
-    model.add(Dense(128,activation='sigmoid'))
-    model.add(Dense(1, activation='softmax'))
-    model.compile(loss='sparse_categorical_crossentropy',
+    model.add(Dense(32,activation='sigmoid',input_shape = (200,200,1)))
+    model.add(Dense(2, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
+    # verbose có nghĩa là cách hiển thị quá trình training
+    # 0 là ko làm gì
+    # 1 là hiển thị cái dòng [=============>...............]
+    # 2 là hiển thị Epoch 1, ...., Epoch n
     H = model.fit(self.xTrain,self.yTrain, validation_data = (self.xVal,self.yVal),
-                  batch_size=32,epochs=1,verbose=10)
+                  epochs=2,verbose=1)
+    score = model.evaluate(self.xTest,self.yTest,verbose=0)
+    print(score)
+    return model
 
-t = HandDetection()
+  def predict(self, input):
+    # input phải là ảnh xám
+    yP = self.model.predict(input.reshape(1,200,200,1))
+    return yP
+    
+
+# t = HandDetection()
