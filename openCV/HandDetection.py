@@ -1,37 +1,79 @@
 import numpy as np
 import os
 import cv2 as cv
+import random
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils
 
 class HandDetection:
   def __init__(self):
-    self.x = self.load_data()
+    self.x, self.y = self.loadData()
     # self.y = np.ones((self.x.shape[0],1))
     # [1,0] : vị trí [0] nghĩa là bàn tay, vị trí [1] nghĩa là ko phải
-    self.y = np.hstack((np.ones((self.x.shape[0],1)),np.zeros((self.x.shape[0],1))))
-    self.xTrain, self.xVal, self.xTest = self.x[:500], self.x[500:600], self.x[600:700]
-    self.yTrain, self.yVal, self.yTest = self.y[:500], self.y[500:600], self.y[600:700]
+    # self.y = np.hstack((np.ones((self.x.shape[0],1)),np.zeros((self.x.shape[0],1))))
+    self.xTrain, self.xVal, self.xTest = self.x[:1000], self.x[1000:1200], self.x[1200:1400]
+    self.yTrain, self.yVal, self.yTest = self.y[:1000], self.y[1000:1200], self.y[1200:1400]
     self.model = self.train()
     # print(self.yTrain)
+    # print(self.y.shape)
   
-  def load_data(self):
-    path = "D:\\file_cua_a_Duc\\datafortrain\\hand"
-    listImg = list()
-    if not os.path.exists(path):
-      print("Don't have data to train !")
-    else:
-      for fImg in os.listdir(path):
-        img = cv.imread(f"{path}\\{fImg}",cv.IMREAD_GRAYSCALE)
-        listImg.append(img)
+  def loadData(self):
+    # parentPath = "D:\\file_cua_a_Duc\\datafortrain"
+    # listDir = os.listdir(parentPath)
+    listImg_x = list()
+    list_y = list()
+    # đoạn code ở dưới này sẽ dành cho Object Detection, trước mắt chúng ta chỉ cần 1 output
+    # Tạo 1 array list, để load hết ảnh vào array list đó
+    # for d in listDir:
+    #   path = f"D:\\file_cua_a_Duc\\datafortrain\\{d}"
+    #   for fImg in os.listdir(path):
+    #     img = cv.imread(f"{path}\\{fImg}",cv.IMREAD_GRAYSCALE)
+    #     listImg_x.append(img)
+    #   if len(list_y) == 0:
+    #     list_y.append(np.ones((len(listImg_x),1)))
+    #   else:
+    #     list_y.append(np.zeros((len(os.listdir(path)),1)))
+
+      # if len(list_y) == 0:
+      #      
+      # else:
+      #   for y in list_y:
+      # ==============================================
+
+    path_h = "D:\\file_cua_a_Duc\\datafortrain\\hand"
+    path_nt = "D:\\file_cua_a_Duc\\datafortrain\\nothing"
+    for fImg in os.listdir(path_h):
+      img = cv.imread(f"{path_h}\\{fImg}",cv.IMREAD_GRAYSCALE)
+      listImg_x.append(img)
+    list_y = np.ones((len(os.listdir(path_h)),1))
+    for fImg in os.listdir(path_nt):
+      img = cv.imread(f"{path_nt}\\{fImg}",cv.IMREAD_GRAYSCALE)
+      listImg_x.append(img)
+    list_y = np.vstack((list_y, np.zeros((len(os.listdir(path_nt)),1))))
+    
     # biến array list thành array numpy
-    listImg = np.asarray(listImg)
-    print(listImg.shape)
-    return listImg
+    listImg_x = np.asarray(listImg_x)
+    print(listImg_x.shape)
+    
+    # Sắp xếp random cái numpy array lại
+    
+    for p in range(0, len(listImg_x)):
+      r = random.randrange(p, listImg_x.shape[0]) # or len(listImg_x)
+
+      tx = listImg_x[p]
+      listImg_x[p] = listImg_x[r]
+      listImg_x[r] = tx
+
+      ty = list_y[p,:]
+      list_y[p,:] = list_y[r,:]
+      list_y[r,:] = ty
+
+
+    return (listImg_x, list_y)
 
   def train(self):
-    # 500,200,200,1
+    # 1000,200,200,1
     self.xTrain = self.xTrain.reshape((self.xTrain.shape[0],200,200,1))
     self.xVal = self.xVal.reshape((self.xVal.shape[0],200,200,1))
     self.xTest = self.xTest.reshape((self.xTest.shape[0],200,200,1))
