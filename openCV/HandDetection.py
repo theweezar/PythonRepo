@@ -12,11 +12,15 @@ class HandDetection:
     # self.y = np.ones((self.x.shape[0],1))
     # [1,0] : vị trí [0] nghĩa là bàn tay, vị trí [1] nghĩa là ko phải
     # self.y = np.hstack((np.ones((self.x.shape[0],1)),np.zeros((self.x.shape[0],1))))
-    self.xTrain, self.xVal, self.xTest = self.x[:1000], self.x[1000:1200], self.x[1200:1400]
-    self.yTrain, self.yVal, self.yTest = self.y[:1000], self.y[1000:1200], self.y[1200:1400]
+    self.xTrain, self.xVal, self.xTest = self.x[:500], self.x[500:700], self.x[700:900]
+    self.yTrain, self.yVal, self.yTest = self.y[:500], self.y[500:700], self.y[700:900]
     self.model = self.train()
     # print(self.yTrain)
     # print(self.y.shape)
+    print(self.predict(self.x[1450]))
+    print(self.predict(self.x[107]))
+    # for i in self.y:
+    #   print(i)
   
   def loadData(self):
     # parentPath = "D:\\file_cua_a_Duc\\datafortrain"
@@ -46,12 +50,15 @@ class HandDetection:
     for fImg in os.listdir(path_h):
       img = cv.imread(f"{path_h}\\{fImg}",cv.IMREAD_GRAYSCALE)
       listImg_x.append(img)
-    list_y = np.ones((len(os.listdir(path_h)),1))
+    list_y = np.hstack((np.ones((len(os.listdir(path_h)),1)),
+                        np.zeros((len(os.listdir(path_h)),1))))
     for fImg in os.listdir(path_nt):
       img = cv.imread(f"{path_nt}\\{fImg}",cv.IMREAD_GRAYSCALE)
       listImg_x.append(img)
-    list_y = np.vstack((list_y, np.zeros((len(os.listdir(path_nt)),1))))
-    
+    list_y = np.vstack((list_y, 
+                        np.hstack((np.zeros((len(os.listdir(path_nt)),1)),
+                        np.ones((len(os.listdir(path_nt)),1))))))
+    # cái list_y là những hàng [0,1] giữa thằng hand vs nothing, hand bên trái, nothing bên phải
     # biến array list thành array numpy
     listImg_x = np.asarray(listImg_x)
     print(listImg_x.shape)
@@ -73,7 +80,7 @@ class HandDetection:
     return (listImg_x, list_y)
 
   def train(self):
-    # 1000,200,200,1
+    # 500,200,200,1
     self.xTrain = self.xTrain.reshape((self.xTrain.shape[0],200,200,1))
     self.xVal = self.xVal.reshape((self.xVal.shape[0],200,200,1))
     self.xTest = self.xTest.reshape((self.xTest.shape[0],200,200,1))

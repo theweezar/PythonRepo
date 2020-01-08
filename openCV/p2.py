@@ -7,8 +7,7 @@ from .HandDetection import HandDetection as HD
 
 class DetectSomething:
   def __init__(self):
-    print("1. Take Image Mode\n2. Detection Mode")
-    self.mode = int(input("Option: "))
+    self.mode = int(input("1. Take Image Mode\n2. Detection Mode\nOption: "))
     if self.mode == 1:
       self.lenList, self.path = self.checkFolder()
     elif self.mode == 2:
@@ -18,7 +17,7 @@ class DetectSomething:
       exit(self)
     print(self.lenList)
     print(self.path)
-    # self.cameraOn()
+    self.cameraOn()
 
   def toBlackWhite(self,frame):
     r,g,b = cv.split(frame)
@@ -62,7 +61,7 @@ class DetectSomething:
       else:
         frame = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
         predict = self.hd.predict(frame.reshape(1,200,200,1))
-        print(predict)
+        # print(predict)
         if predict[0][0] >= 0.8:
           print("Hand detected")
         else:
