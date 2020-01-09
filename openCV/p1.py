@@ -13,6 +13,7 @@ class ImageProcessing:
     self.height = len(self.img)
     self.width = len(self.img[0])
     self.r, self.g, self.b = cv.split(self.img)
+    self.path = "save_images"
 
   def reset(self):
     # print('After Reset:\n')
@@ -88,7 +89,7 @@ class ImageProcessing:
 
   def saveImage(self ,imgName = 'output.jpg'):
     # Tên mặc định của hình là output.jpg
-    cv.imwrite(imgName, self.rsImg)
+    cv.imwrite(f"{self.path}\\{imgName}", self.rsImg)
 
   def drawImage(self,usingCV = True):
     if usingCV is True:

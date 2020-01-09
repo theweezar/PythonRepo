@@ -96,11 +96,11 @@ class DetectSomething:
         break
       cv.rectangle(frame,(fx,fy),(tx,ty),(255,0,0))
       pFrame = frame[fy:ty,fx:tx]
-      pFrame = cv.resize(pFrame,(200,200))
       # pFrame = self.toBlackWhite(pFrame)
-      # pFrame = self.edgeDetection(pFrame)
-      # frame[fy:ty,fx:tx] = pFrame
+      pFrame = self.edgeDetection(pFrame)
+      frame[fy:ty,fx:tx] = pFrame
       cv.imshow('frame',frame)
+      pFrame = cv.resize(pFrame,(200,200))
       self.processing(pFrame)
         
 

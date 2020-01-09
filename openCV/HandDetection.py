@@ -89,11 +89,11 @@ class HandDetection:
     # self.yTest = np_utils.to_categorical(self.yTest,1)
     model = Sequential()
     # những hàm .add dưới này là add layer vào model để train
-    # model.add(Conv2D(32,(3,3),activation = "sigmoid",input_shape = (200,200,1)))
+    model.add(Conv2D(32,(3,3),activation = "sigmoid",input_shape = (200,200,1)))
     # model.add(Conv2D(32,(3,3),activation = "sigmoid"))
-    # model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(MaxPooling2D(pool_size=(2,2)))
     model.add(Flatten())
-    model.add(Dense(32,activation='sigmoid',input_shape = (200,200,1)))
+    model.add(Dense(32,activation='sigmoid'))
     model.add(Dense(2, activation='softmax'))
     model.compile(loss='categorical_crossentropy',
               optimizer='adam',
@@ -103,7 +103,7 @@ class HandDetection:
     # 1 là hiển thị cái dòng [=============>...............]
     # 2 là hiển thị Epoch 1, ...., Epoch n
     H = model.fit(self.xTrain,self.yTrain, validation_data = (self.xVal,self.yVal),
-                  epochs=2,verbose=1)
+                  epochs=2,verbose=1,batch_size=32)
     score = model.evaluate(self.xTest,self.yTest,verbose=0)
     print(score)
     return model
