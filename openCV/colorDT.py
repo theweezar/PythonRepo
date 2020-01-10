@@ -37,7 +37,7 @@ class ColorDT:
         print("Something went wrong, can't receive frames !")
     
     # ghi hình backgroud để trong loop là vì lúc camera bắt đầu, nó cần thời gian để lấy nét
-    print("Capturing backgroud.....")
+    print("Capturing background.....")
     for i in range(0,100): 
       ret, background = cap.read()
       if not ret:
@@ -97,6 +97,11 @@ class ColorDT:
     # frame = cv.filter2D(frame,0,k)
     hsv = cv.cvtColor(frame,cv.COLOR_BGR2HSV)
     lowerColor = upperColor = 0
+    # mask là 1 frame để xác định màu, px nào có màu cần xác định sẽ là màu trắng, px nào có màu ko
+    # ko phải sẽ là màu đen
+    # các pt bitwise_and,or,not,xor xác định theo 1 mask, trong đó trắng là True, đen là False
+    # bitwise_and có thể hiểu là vị trí nào có màu True thì sẽ để nguyên, vị trí nào có màu False
+    # thì sẽ set thành màu đen
     mask = None
     if self.opt == 1:
       lowerColor, upperColor = self.customColor()
@@ -113,7 +118,7 @@ class ColorDT:
       # mask cuối cùng sẽ là mask có màu đỏ rõ nhất
       mask = mask1 + mask2
       # làm cho màu đỏ smooth hơn
-      mask = cv.morphologyEx(mask, cv.MORPH_OPEN, np.ones((3,3),np.uint8))
+      mask = cv.morphologyEx(mask, cv.MORPH_GRADIENT, np.ones((3,3),np.uint8))
       # tô viền cho màu đỏ đó
       # mask = cv.morphologyEx(mask, cv.MORPH_DILATE, np.ones((3,3),np.uint8))
       
@@ -123,7 +128,9 @@ class ColorDT:
     else:
       exit(self)
       
+    
     res = cv.bitwise_and(frame,frame,mask=mask)
+    res = cv.addWeighted(frame,1,res,1,0)
 
     return res
 
