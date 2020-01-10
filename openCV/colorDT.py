@@ -1,6 +1,8 @@
 import cv2 as cv
-import numpy as np 
+import numpy as np
 import os
+
+
 # https://www.learnopencv.com/invisibility-cloak-using-color-detection-and-segmentation-with-opencv/
 def nothing(x):
   pass
@@ -38,13 +40,16 @@ class ColorDT:
     
     # ghi hình backgroud để trong loop là vì lúc camera bắt đầu, nó cần thời gian để lấy nét
     print("Capturing background.....")
-    for i in range(0,100): 
+    for i in range(0,30): 
       ret, background = cap.read()
       if not ret:
         print("Something went wrong, can't receive frames !")
         isOn = False
         break
-
+    # set màu đen cho background
+    background[:,:,0] = 0
+    background[:,:,1] = 0
+    background[:,:,2] = 0
     # Ghi hình - bắt đầu
     while isOn:
       ret, frame = cap.read()
@@ -60,12 +65,27 @@ class ColorDT:
       # pFrame = frame[fy:fy+dist,fx:fx+dist]
       pFrame = frame
       pFrame = self.detect(pFrame,background=background)
+      # track contour
+      contours = self.conTourColor(pFrame)
+      if len(contours) != 0:
+        cv.line(background,(contours[0][0][0][0],contours[0][0][0][1]),
+        (contours[0][0][0][0],contours[0][0][0][1]),(255,255,255),thickness=5)
+        # cv.circle(background,(contours[0][0][0][0],contours[0][0][0][1]),2, (255,255,255), 1)
+      # vẽ vùng contour cho pFrame rồi đè lên frame chính
+      cv.drawContours(pFrame,contours,-1,(0,255,0),3)
+      # ghép đè pFrame lên frame
+      pFrame = cv.addWeighted(frame,1,pFrame,1,0)
       # print(f"pFrame: \n{pFrame.shape}")
       # show camera
-      cv.imshow("Camera",frame)
+      # cv.imshow("Camera",frame)
+      cv.imshow("Background",background)
       cv.imshow("pFrame",pFrame)
       if cv.waitKey(1) == 27:
         break
+      elif cv.waitKey(1) == ord("r"):
+        background[:,:,0] = 0
+        background[:,:,1] = 0
+        background[:,:,2] = 0
 
   def skinColor(self):
     return (np.array([0,48,80]), 
@@ -117,8 +137,12 @@ class ColorDT:
       mask2 = cv.inRange(hsv,lowerColor,upperColor)
       # mask cuối cùng sẽ là mask có màu đỏ rõ nhất
       mask = mask1 + mask2
+      # Khử noise - bỏ nhiễu
+      kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(3,3))
+      mask = cv.erode(mask,kernel,iterations=2)
+      mask = cv.dilate(mask,kernel,iterations=2)
       # làm cho màu đỏ smooth hơn
-      mask = cv.morphologyEx(mask, cv.MORPH_GRADIENT, np.ones((3,3),np.uint8))
+      # mask = cv.morphologyEx(mask, cv.MORPH_OPEN, np.ones((3,3),np.uint8))
       # tô viền cho màu đỏ đó
       # mask = cv.morphologyEx(mask, cv.MORPH_DILATE, np.ones((3,3),np.uint8))
       
@@ -130,9 +154,15 @@ class ColorDT:
       
     
     res = cv.bitwise_and(frame,frame,mask=mask)
-    res = cv.addWeighted(frame,1,res,1,0)
-
     return res
+
+
+  def conTourColor(self,frame):
+    frame = cv.cvtColor(frame,cv.COLOR_HSV2BGR)
+    frame = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+    ret, thresh = cv.threshold(frame, 127, 255, cv.THRESH_BINARY) # 255 / 2 = 127.5
+    contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    return contours
 
   def mouseClickPixel(self,event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONUP:

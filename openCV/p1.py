@@ -2,7 +2,7 @@ import cv2 as cv
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-
+# https://docs.opencv.org/master/d6/d00/tutorial_py_root.html
 class ImageProcessing:
   def __init__(self ,imgLink):
     # Original Image - hình gốc

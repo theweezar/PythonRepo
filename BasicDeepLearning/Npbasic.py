@@ -28,6 +28,9 @@ print(f"\nMin of matrix b : {np.min(b, axis = 1)}")
 # áp dụng luôn cho cả phương thức np.min()
 print(f"\nMax of every row in b : {np.max(b, axis = 1)}")
 
+# lấy vị trí nhỏ nhất trong ma trận
+
+
 # phương thức cộng tất cả phần tử bên trong ma trận
 print(f"\nSum of matrix = {np.sum(b)}")
 
