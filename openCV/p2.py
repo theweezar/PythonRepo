@@ -15,8 +15,8 @@ class DetectSomething:
       self.hd = HD()
     else:
       exit(self)
-    print(self.lenList)
-    print(self.path)
+    # print(self.lenList)
+    # print(self.path)
     self.cameraOn()
 
   def toBlackWhite(self,frame):
@@ -47,16 +47,16 @@ class DetectSomething:
 
   def processing(self, frame):
     if self.mode == 1: # 1 là chế độ chụp ảnh
-      if cv.waitKey(0) == 27:
+      if cv.waitKey(1) == 27:
         exit(self)
-      elif cv.waitKey(0) == ord("c"):
+      elif cv.waitKey(1) == ord("c"):
         if self.lenList < 750:
           cv.imwrite(f"{self.path}\\{os.path.basename(self.path)}{self.lenList}.jpg",frame)
           self.lenList += 1
         else:
           print("Can't take more image in folder")
     else:
-      if cv.waitKey(0) == 27:
+      if cv.waitKey(1) == 27:
         exit(self)
       else:
         frame = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
@@ -97,7 +97,7 @@ class DetectSomething:
       cv.rectangle(frame,(fx,fy),(tx,ty),(255,0,0))
       pFrame = frame[fy:ty,fx:tx]
       # pFrame = self.toBlackWhite(pFrame)
-      pFrame = self.edgeDetection(pFrame)
+      # pFrame = self.edgeDetection(pFrame)
       frame[fy:ty,fx:tx] = pFrame
       cv.imshow('frame',frame)
       pFrame = cv.resize(pFrame,(200,200))

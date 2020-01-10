@@ -17,8 +17,8 @@ class HandDetection:
     self.model = self.train()
     # print(self.yTrain)
     # print(self.y.shape)
-    print(self.predict(self.x[1450]))
-    print(self.predict(self.x[107]))
+    # print(self.predict(self.x[1450]))
+    # print(self.predict(self.x[107]))
     # for i in self.y:
     #   print(i)
   
@@ -64,9 +64,9 @@ class HandDetection:
     print(listImg_x.shape)
     
     # Sắp xếp random cái numpy array lại
-    
-    for p in range(0, len(listImg_x)):
-      r = random.randrange(p, listImg_x.shape[0]) # or len(listImg_x)
+    label = int(len(listImg_x) / 2)
+    for p in range(0, len(listImg_x) - 1):
+      r = random.randrange(0, listImg_x.shape[0]) # or len(listImg_x)
 
       tx = listImg_x[p]
       listImg_x[p] = listImg_x[r]
@@ -88,10 +88,10 @@ class HandDetection:
     # self.yVal = np_utils.to_categorical(self.yVal,1)
     # self.yTest = np_utils.to_categorical(self.yTest,1)
     model = Sequential()
+    model.add(MaxPooling2D(pool_size=(2,2), input_shape = (200,200,1)))
     # những hàm .add dưới này là add layer vào model để train
-    model.add(Conv2D(32,(3,3),activation = "sigmoid",input_shape = (200,200,1)))
-    # model.add(Conv2D(32,(3,3),activation = "sigmoid"))
-    model.add(MaxPooling2D(pool_size=(2,2)))
+    # model.add(Conv2D(32,(3,3),activation = "sigmoid",input_shape = (200,200,1)))
+    model.add(Conv2D(32,(3,3),activation = "sigmoid"))
     model.add(Flatten())
     model.add(Dense(32,activation='sigmoid'))
     model.add(Dense(2, activation='softmax'))
