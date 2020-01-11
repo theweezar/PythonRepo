@@ -74,11 +74,11 @@ class ColorDT:
       # vẽ vùng contour cho pFrame rồi đè lên frame chính
       cv.drawContours(pFrame,contours,-1,(0,255,0),3)
       # ghép đè pFrame lên frame
-      pFrame = cv.addWeighted(frame,1,pFrame,1,0)
+      # pFrame = cv.addWeighted(frame,1,pFrame,1,0)
       # print(f"pFrame: \n{pFrame.shape}")
       # show camera
-      # cv.imshow("Camera",frame)
-      cv.imshow("Background",background)
+      cv.imshow("Camera",frame)
+      # cv.imshow("Background",background)
       cv.imshow("pFrame",pFrame)
       if cv.waitKey(1) == 27:
         break
@@ -111,6 +111,13 @@ class ColorDT:
                       cv.getTrackbarPos('hS',"track"),
                       cv.getTrackbarPos('hV',"track")]))
 
+  def filterNoise(self,frame):
+    # Khử noise - bỏ nhiễu
+    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(3,3))
+    frame = cv.erode(frame,kernel,iterations=2)
+    frame = cv.dilate(frame,kernel,iterations=2)
+    return frame
+
   def detect(self,frame,background = None):
     # frame[0,:]
     # k = 1/9 * np.array([[1,1,1],[1,1,1],[1,1,1]])
@@ -129,6 +136,12 @@ class ColorDT:
     elif self.opt == 2:
       lowerColor, upperColor = self.skinColor()
       mask = cv.inRange(hsv,lowerColor,upperColor)
+      mask = self.filterNoise(mask)
+      a = np.array([[0.299,0.587,0.114],[-0.147,-0.289,0.436],[0.615,-0.515,-0.100]])
+      f = frame
+      f = np.dot(f,a) + np.array([0,128,128]).reshape((-1,1))
+      print(f)
+
     elif self.opt == 3:
       # Cách xác định rõ màu đỏ
       lowerColor, upperColor = self.redColorLower()
@@ -137,10 +150,7 @@ class ColorDT:
       mask2 = cv.inRange(hsv,lowerColor,upperColor)
       # mask cuối cùng sẽ là mask có màu đỏ rõ nhất
       mask = mask1 + mask2
-      # Khử noise - bỏ nhiễu
-      kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(3,3))
-      mask = cv.erode(mask,kernel,iterations=2)
-      mask = cv.dilate(mask,kernel,iterations=2)
+      mask = self.filterNoise(mask)
       # làm cho màu đỏ smooth hơn
       # mask = cv.morphologyEx(mask, cv.MORPH_OPEN, np.ones((3,3),np.uint8))
       # tô viền cho màu đỏ đó
@@ -152,7 +162,6 @@ class ColorDT:
     else:
       exit(self)
       
-    
     res = cv.bitwise_and(frame,frame,mask=mask)
     return res
 
