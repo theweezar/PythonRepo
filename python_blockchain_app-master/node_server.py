@@ -65,7 +65,7 @@ class Blockchain:
         return True
 
     @staticmethod
-    def proof_of_work(block):
+    def proof_of_work(block): # Quá trình miner của block sao cho hợp lệ dãy chain
         """
         Function that tries different values of nonce to get a hash
         that satisfies our difficulty criteria.
@@ -83,7 +83,7 @@ class Blockchain:
         self.unconfirmed_transactions.append(transaction)
 
     @classmethod
-    def is_valid_proof(cls, block, block_hash):
+    def is_valid_proof(cls, block, block_hash): 
         """
         Check if block_hash is valid hash of block and satisfies
         the difficulty criteria.

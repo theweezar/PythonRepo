@@ -5,8 +5,8 @@ import numpy as np
 a = np.array([1,2,3,4])
 # ma trận 2x3
 b = np.array([[1,2,3,4],[5,6,7,8]])
-print(a)
-print(b)
+print(f"\nMa trận a:\n{a}")
+print(f"\nMa trận b:\n{b}")
 
 print(f"\nDimension of b: {b.ndim}")
 
@@ -40,15 +40,15 @@ print(f"\nSum of every column in matrix= {np.sum(b, axis = 0)}")
 # phương thức biến hình - reshape(row,col)- nhưng phải đúng chuẩn
 # và phải tính hàng, cột làm sao cho đủ phần tử, ko thì nó sẽ báo lỗi
 c = b.reshape(4,2)
-print(c)
+print(f"\nPhương thức biến hình:\n{c}")
 
 # phương thức khởi tạo ma trận với mọi phần tử = 0, trong trường hợp này là ma trận 3x4
 zeroMatrix = np.zeros((3,4))
-print(zeroMatrix)
+print(f"\nKhởi tạo ma trận với mọi phân tử = 0:\n{zeroMatrix}")
 
 # phương thức khởi tạo ma trận với mọi phần tử bằng nhau
 fullMatrix = np.full((3,4),5)
-print(fullMatrix)
+print(f"\nKhởi tạo ma trận với mọi phân tử bằng nhau: \t{fullMatrix}")
 
 # phương thức nhân 2 ma trận lại với nhau sau đó cộng hết tất cả phần tử trong 1 cột lại vs nhau, 
 # trong trường hợp này a x c số cột của a phải bằng số hàng của c, nếu ko thì nó sẽ báo lỗi

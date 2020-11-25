@@ -71,12 +71,12 @@ class ImageProcessing:
         break
       k = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
       # k = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
-      result = cv.filter2D(frame,0,k)
+      # result = cv.filter2D(frame,0,k)
       # k = np.ones((3,3))
-      # result = cv.morphologyEx(frame, cv.MORPH_GRADIENT, k)
+      result = cv.morphologyEx(frame, cv.MORPH_GRADIENT, k)
       # show frame ra
       cv.imshow('frame', result)
-      if cv.waitKey(0) == 27:
+      if cv.waitKey(1) == 27:
         break
 
     cap.release()
@@ -104,7 +104,7 @@ class ImageProcessing:
 
 img = ImageProcessing('pic.jpg')
 # img.toBlackWhite()
-# img.saveImage('blackwhite.jpg')
+# img.saveImage('blackwhite_1.jpg')
 # img.reset()
 # img.toYellow()
 # img.saveImage('changed.jpg')
@@ -120,8 +120,8 @@ img = ImageProcessing('pic.jpg')
 # img.kernel(np.array([[0,1,0],[1,-4,1],[0,1,0]]))
 # img.drawImage()
 
-# img.onCamera()
+img.onCamera()
 
 # img.drawImage(False)
 
-img.testing()
+# img.testing()

@@ -91,8 +91,8 @@ for i in range(0,N):
 
 predict = x * w[1] + w[0]
 
-# plt.plot((x.begin,x.end),(y.begin,y.end),'màu') vẽ đường thẳng - r: red
+# plt.plot((x.begin,x.end),(y.begin,y.end),'màu') # vẽ đường thẳng - r: red
 plt.plot((x[0],x[N-1]),(predict[0],predict[N - 1]),'r') 
-# plt.show() 
+plt.show() 
 
 input()
