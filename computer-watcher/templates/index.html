@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watcher</title>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.css')}}">
+  <script src="{{url_for('static',filename='js/node_modules/socket.io-client/dist/socket.io.js')}}"></script>
+</head>
+<body>
+  <div class="contaier text-center">
+    <div>
+      <button id="screenCpt" class="btn-capture px-2 py-1 my-4">Screen capture</button>
+    </div>
+    <div>
+      <button id="webcamCpt" class="btn-capture px-2 py-1 my-4">Webcam capture</button>
+    </div>
+  </div>
+  <script src="{{url_for('static',filename='js/main.js')}}"></script>
+</body>
+</html>

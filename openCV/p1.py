@@ -24,7 +24,10 @@ class ImageProcessing:
   def toBlackWhite(self):
     t = self.r * 0.299 + self.g * 0.587 + self.b * 0.114
     self.r = self.g = self.b = t
-    self.rsImg = cv.merge((self.r,self.b,self.g))
+    self.rsImg = np.array(cv.merge((self.r,self.b,self.g))).astype('uint8')
+    ret,thresh = cv.threshold(self.rsImg,127,255,cv.THRESH_BINARY)
+    self.rsImg = thresh
+    
   
   def toYellow(self):
     self.b[:,:] = 255
@@ -56,6 +59,11 @@ class ImageProcessing:
       k = np.ones((3,3))
       result = cv.morphologyEx(self.img, mode, k)
       self.rsImg = result
+  
+  def threshold(self):
+    ret,thresh1 = cv.threshold(self.img,127,255,cv.THRESH_BINARY)
+    self.rsImg = thresh1
+
 
   def onCamera(self):
     cap = cv.VideoCapture(0)
@@ -69,10 +77,10 @@ class ImageProcessing:
       if not ret:
         print("Something went wrong, can't receive frames !")
         break
-      k = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
+      # k = np.array([[-1,-1,-1],[-1,8,-1],[-1,-1,-1]])
       # k = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
       # result = cv.filter2D(frame,0,k)
-      # k = np.ones((3,3))
+      k = np.ones((3,3))
       result = cv.morphologyEx(frame, cv.MORPH_GRADIENT, k)
       # show frame ra
       cv.imshow('frame', result)
@@ -82,10 +90,9 @@ class ImageProcessing:
     cap.release()
     cv.destroyAllWindows()
 
-  def testing(self):
-    k = np.ones((5,5))
-    result = cv.filter2D(self.img,-3,k,delta=2)
-    print(result.shape)
+  def printShape(self):
+    print(f"\nimg shape   : ${self.img.shape}")
+    print(f"\nrsImg shape : ${self.rsImg.shape}")
 
   def saveImage(self ,imgName = 'output.jpg'):
     # Tên mặc định của hình là output.jpg
@@ -98,12 +105,14 @@ class ImageProcessing:
       if cv.waitKey(0) == 27:
         cv.destroyAllWindows()
     else:
+      # self.rsImg = cv.cvtColor(self.rsImg, cv.COLOR_BGR2RGB)
       plt.imshow(self.rsImg)
       plt.show()
     
 
-img = ImageProcessing('pic.jpg')
-# img.toBlackWhite()
+img = ImageProcessing('mygirl_1.jpg')
+img.toBlackWhite()
+# img.printShape()
 # img.saveImage('blackwhite_1.jpg')
 # img.reset()
 # img.toYellow()
@@ -117,11 +126,12 @@ img = ImageProcessing('pic.jpg')
 # img.reset()
 # img.morphologyEx(cv.MORPH_CROSS)
 # img.saveImage('morphologyEx.jpg')
-# img.kernel(np.array([[0,1,0],[1,-4,1],[0,1,0]]))
+# img.kernel(np.array([[-2,1,1],[1,-2,1],[2,1,-3]]))
+# img.threshold()
 # img.drawImage()
 
-img.onCamera()
+# img.onCamera()
 
-# img.drawImage(False)
+img.drawImage(False)
 
 # img.testing()

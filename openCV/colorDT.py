@@ -137,10 +137,10 @@ class ColorDT:
       lowerColor, upperColor = self.skinColor()
       mask = cv.inRange(hsv,lowerColor,upperColor)
       mask = self.filterNoise(mask)
-      a = np.array([[0.299,0.587,0.114],[-0.147,-0.289,0.436],[0.615,-0.515,-0.100]])
-      f = frame
-      f = np.dot(f,a) + np.array([0,128,128]).reshape((-1,1))
-      print(f)
+      # a = np.array([[0.299,0.587,0.114],[-0.147,-0.289,0.436],[0.615,-0.515,-0.100]])
+      # f = frame
+      # f = np.dot(f,a) + np.array([0,128,128]).reshape((-1,1))
+      # print(f)
 
     elif self.opt == 3:
       # Cách xác định rõ màu đỏ
