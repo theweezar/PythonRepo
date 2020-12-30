@@ -91,7 +91,7 @@ class ColorDT:
     return (np.array([0,48,80]), 
             np.array([20,255,255])) # lower, upper
 
-  def redColorLower(Self):
+  def redColorLower(self):
     return (np.array([0,120,70]),
             np.array([10,255,255]))
 
