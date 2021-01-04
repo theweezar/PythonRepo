@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 def sigmoid(z):
-  return 1 / (1 + np.exp(-z))
+  return 1 / (1 + np.exp(-z)) # 1 / (1 + e^-z)
 
 # Cách dùng là truyền tham biến là 1 hàm sigmoid luôn, chứ ko phải là 1 hàm pt linear
 def dSigmoid(z): 
@@ -15,10 +15,11 @@ class NeuralNetWork:
     # super().__init__()
     # z = b[] + x * w[]
     # alphal là learning rate
-    self.layers = layers
-    self.alphal = alphal
-    self.w = []
-    self.b = []
+    self.layers = layers # input, hidden, output layer. Trong ví dụ này sẽ là [2,2,1]
+    # Có nghĩa là 2 input layer, 2 hidden layer và 1 ouputlayer
+    self.alphal = alphal # có thể hiểu đây là learning_rate
+    self.w = [] # w1 và w2 - ẩn số cần tìm
+    self.b = [] # b là bias 
     self.loss = 0
 
     for i in range(0, len(layers) - 1):
@@ -44,12 +45,12 @@ class NeuralNetWork:
     A = [x]
 
     # Feedforward - tức là đi tính xác suất dự đoán vs những hệ số bias có sẵn
-    out = A[-1] # out ở khúc này là giá trị input
+    out = A[-1] # out ở khúc này là giá trị input - hằng số
     # tính những giá trị y predict của từng layer, phần tử cuối là giá trị y predict output
     # ta có thể dùng cho hàm loss function
     for i in range(0, len(self.layers) - 1):
-      out = sigmoid(np.dot(out,self.w[i]) + self.b[i].T)
-      A.append(out) # append số lần i của out trong này là xác suất của những hidden layer
+      out = sigmoid(np.dot(out,self.w[i]) + self.b[i].T) # x1*w1 + x2*w2 + bias
+      A.append(out) # append số lần i của out trong này là xác suất - y predict của những hidden layer
 
 
     # Backpropagation - tức là đạo hàm ngược lại đi qua từng hidden layer để tìm giá trị nhỏ nhất
@@ -58,7 +59,7 @@ class NeuralNetWork:
     # Mảng A sẽ chứa theo thứ tự: (x-input, hlayer1 tính theo x, output tính theo hlayer1)
     # print(f"A: \n{A}")
     # print(y)
-    # A[-1] sẽ là kết quả output
+    # A[-1] sẽ là kết quả output - giá trị y predict. A[-1] dưới này là đã được tính sigmoid nên ko cần tính lại
     dA = [-(y - A[-1]) / (A[-1] * (1 - A[-1]))] 
     # cái này là dL/dyP - đạo hàm Loss function theo yP
     dW = []
