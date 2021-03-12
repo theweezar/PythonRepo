@@ -39,7 +39,7 @@ class Wulee:
   def hide_in_block(self, block, word):
     # Kí tự từ dạng char sang dạng binary
     bin_word = '{0:08b}'.format(ord(word))
-    # print('Block:\n',block,'\nSecret word:',word,'====>',bin_word)
+    print('Block:\n',block,'\nSecret word:',word,'====>',bin_word)
     # 1 block sẽ có 8 cột số, ta duyệt từng cột
     for i in range(0,8):
       # trích xuất 1 cột có chiều dài = 8
@@ -92,7 +92,7 @@ class Wulee:
               if replace is True:
                 break
           # print('====> Everything else')
-    # print('\nNew Block:\n', block)
+    print('\nNew Block:\n', block)
     return block
   
   def hide(self):
@@ -199,8 +199,8 @@ the_key = np.array([
 # wulee.setImage('cat.jpeg').setMessage('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Augue interdum velit euismod in pellentesque massa. Eget dolor morbi non arcu risus quis varius quam quisque. Mauris ultrices eros in cursus turpis massa. Hac habitasse platea dictumst vestibulum rhoncus. Fusce id velit ut tortor. Consequat mauris nunc congue nisi. Habitasse platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Mauris sit amet massa vitae tortor condimentum. Quis eleifend quam adipiscing vitae proin sagittis.')
 # wulee.setKey(the_key).hide().saveStegoImage('stego.png')
 # print('\nBlock 1:\n',wulee.getImage()[0:8,0:8])
-
-wulee.setImage('stego.png').setKey(the_key).retrieve()
+wulee.setImage('cat.jpeg').setMessage('d').setKey(the_key).hide()
+# wulee.setImage('stego.png').setKey(the_key).retrieve()
 
 # Old block
 # [[175 175 177 176 177 177 178 178]
