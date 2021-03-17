@@ -196,10 +196,10 @@ the_key = np.array([
             [0,1,0,1,0,1,0,0]
         ])
 
-# wulee.setImage('cat.jpeg').setMessage('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Augue interdum velit euismod in pellentesque massa. Eget dolor morbi non arcu risus quis varius quam quisque. Mauris ultrices eros in cursus turpis massa. Hac habitasse platea dictumst vestibulum rhoncus. Fusce id velit ut tortor. Consequat mauris nunc congue nisi. Habitasse platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Mauris sit amet massa vitae tortor condimentum. Quis eleifend quam adipiscing vitae proin sagittis.')
-# wulee.setKey(the_key).hide().saveStegoImage('stego.png')
+wulee.setImage('cat.jpeg').setMessage('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Augue interdum velit euismod in pellentesque massa. Eget dolor morbi non arcu risus quis varius quam quisque. Mauris ultrices eros in cursus turpis massa. Hac habitasse platea dictumst vestibulum rhoncus. Fusce id velit ut tortor. Consequat mauris nunc congue nisi. Habitasse platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Mauris sit amet massa vitae tortor condimentum. Quis eleifend quam adipiscing vitae proin sagittis.')
+wulee.setKey(the_key).hide().saveStegoImage('stego.png')
 # print('\nBlock 1:\n',wulee.getImage()[0:8,0:8])
-wulee.setImage('cat.jpeg').setMessage('d').setKey(the_key).hide()
+# wulee.setImage('cat.jpeg').setMessage('d').setKey(the_key).hide()
 # wulee.setImage('stego.png').setKey(the_key).retrieve()
 
 # Old block
