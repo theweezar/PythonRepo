@@ -65,8 +65,8 @@ class WuleeLastestVersion:
     # self.cover_image.flags.writeable = True
     # print(dir(self.cover_image))
 
-  def save_stego_image(self, filename):
-    cv2.imwrite(filename, self.cover_image)
+  def save_stego_image(self, file_name):
+    cv2.imwrite(file_name, self.cover_image)
 
   def set_retrieve_max(self, retrieve_max):
     self.retrieve_max = retrieve_max
@@ -246,3 +246,4 @@ Image width: {self.get_cover_image_width()}"""
 # wulee.set_retrieve_max(5)
 # wulee.retrieve()
 # print(wulee.retrieve_message)
+# wulee.save_stego_image(

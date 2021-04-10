@@ -10,10 +10,11 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import (QFileDialog, QApplication, QFileDialog, QBoxLayout,QWidget)
+from PyQt5.QtWidgets import QFileDialog, QApplication, QFileDialog, QBoxLayout, QWidget, QInputDialog
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QDir
 from wulee_v1 import WuleeLastestVersion
+import re
 
 
 class Ui_MainWindow(object):
@@ -225,20 +226,26 @@ class Ui_MainWindow(object):
         self._image_path_8.setText(_translate("MainWindow", "PASSWORD"))
         self._setkey.setText(_translate("MainWindow", "SET KEY"))
 
+    # Display popup cảnh báo
     def show_popup(self, title, content):
         popup = QMessageBox()
         popup.setWindowTitle(title)
         popup.setText(content)
         popup.exec_()
         
+    # Display thông báo lên phần NOTIFICATIONS
     def nofiticate(self, content):
         self._notifications.append(content)
-    
+       
+    # Set eventlistener cho cái phím bấm
     def set_event_connection(self):
         self._import.clicked.connect(self.getfile)
         self._hide.clicked.connect(self.begin_to_hide)
         self._setkey.clicked.connect(self.set_key)
+        self._retrieve.clicked.connect(self.begin_to_retrieve)
+        self._save.clicked.connect(self.saveFileDialog)
         
+    # Xóa bỏ các input key, message
     def reset_password_message(self):
         _translate = QtCore.QCoreApplication.translate
         self._message.setText("")
@@ -257,6 +264,8 @@ class Ui_MainWindow(object):
             password = self._password.text().strip()
             if len(password) == 0:
                 self.show_popup('Warning','Key is null')
+            elif len(password) > self.wulee.get_cover_image_height():
+                self.show_popup('Warning','Key is too long')
             else:
                 # totalCharHidden = (int)Math.floor((wulee.getTotalPixels() / (keyString.length() * 8))) * 3;
                 self.total_char_hidden = int((self.wulee.get_total_pixels() / (len(password) * 8)) * 3)
@@ -275,7 +284,7 @@ class Ui_MainWindow(object):
             self._setkey.setText(_translate("MainWindow", "SET KEY"))
             self.nofiticate("Set key to null")
             
-    
+    # Import file ảnh
     def getfile(self):
         file_name, _ = QFileDialog.getOpenFileName(QtWidgets.QMainWindow(), 'Open Image File',r"D:\\Picture\\","Image files (*.jpg *.jpeg *.gif *.png)")
         if len(file_name) != 0:
@@ -285,7 +294,23 @@ class Ui_MainWindow(object):
             self.wulee.set_cover_image(file_name)
             self.nofiticate(f"Import file at path {file_name}\n{self.wulee.calculate()}")
     
+    # Save file ảnh
+    def saveFileDialog(self):
+        if self.wulee.cover_image is None:
+            self.show_popup("Warning","Image is None")
+        else:
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            file_name, _ = QFileDialog.getSaveFileName(QtWidgets.QMainWindow(),"Save Image File","","Image files (*.png)", options=options)
+            if file_name:
+                has_ext = re.search("(.*).png", file_name)
+                if has_ext is None:
+                    file_name += ".png" 
+                self.wulee.save_stego_image(file_name)
+                self.nofiticate(f"Save image at path {file_name}")
+    
     def begin_to_hide(self):
+        # Lấy message từ QTextEdit
         message = self._message.toPlainText().strip()
         
         if self.wulee.cover_image is None:
@@ -301,14 +326,36 @@ class Ui_MainWindow(object):
             self.wulee.set_message(message)
             self.nofiticate('Begin to hide')
             self.wulee.hide()
+            self.wulee.set_key_to_null()
             self.wulee.reset_when_hide()
             self.nofiticate('Done!')
             
             self.reset_password_message()
             
-            
-    #def begin_to_retrieve(self):
-            
+    def begin_to_retrieve(self):
+        if self.wulee.cover_image is None:
+            self.show_popup('Warning','Cover image is null')
+        elif self.is_key_set is False:
+            self.show_popup('Warning','Key is null')
+        else:
+            max_len, okPressed = QInputDialog.getInt(None, "Get length",f"Message's length (maximum: {self.total_char_hidden})", self.total_char_hidden, 0, self.total_char_hidden, 1)
+            if okPressed:
+                self.nofiticate("Begin to retrieve")
+
+                self.wulee.set_retrieve_max(max_len)
+                self.wulee.retrieve()
+                self.wulee.set_key_to_null()
+                self.reset_password_message()
+                
+                _translate = QtCore.QCoreApplication.translate
+                secret_msg = self.wulee.retrieve_message
+                self._message.setText(_translate("MainWindow", secret_msg))
+                
+                self.wulee.reset_when_retrieve_done()
+                
+                self.nofiticate("Done!")
+                
+                
         
             
         
