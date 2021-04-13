@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog, QApplication, QFileDialog, QBoxLayout, QWidget, QInputDialog
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QDir
-from wulee_v1 import WuleeLastestVersion
+from wulee_v2 import WuleeLastestVersion
 import re
 
 
@@ -359,9 +359,7 @@ class Ui_MainWindow(object):
         
             
         
-            
-      
-
+          
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
