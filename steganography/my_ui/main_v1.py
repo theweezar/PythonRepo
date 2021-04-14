@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
         # my var
         self.wulee = WuleeLastestVersion()
         self.is_key_set = False
-        self.total_char_hidden = 0
+        # self.total_char_hidden = 0
 
 
         MainWindow.setObjectName("MainWindow")
@@ -268,12 +268,12 @@ class Ui_MainWindow(object):
                 self.show_popup('Warning','Key is too long')
             else:
                 # totalCharHidden = (int)Math.floor((wulee.getTotalPixels() / (keyString.length() * 8))) * 3;
-                self.total_char_hidden = int((self.wulee.get_total_pixels() / (len(password) * 8)) * 3)
+                # self.total_char_hidden = int((self.wulee.get_total_pixels() / (len(password) * 8)) * 3)
                 # set key vào bộ xử lý wulee
                 self.wulee.set_key(password)
                 self.is_key_set = True
                 self._setkey.setText(_translate("MainWindow", "CHANGE"))
-                self.nofiticate(f"Key length is: {len(password)} | Characters can be hidden in 3 channel: {self.total_char_hidden}")
+                self.nofiticate(f"Key length is: {len(password)}")
                 self._password.setReadOnly(True)
         # Nếu key được đã set
         else:
@@ -319,8 +319,6 @@ class Ui_MainWindow(object):
             self.show_popup('Warning','Key is null')
         elif len(message) == 0:
             self.show_popup('Warning','Message is null')
-        elif len(message) > self.total_char_hidden:
-            self.show_popup('Warning','Message is too long')
         else:
             # set tin nhắn vào bộ xử lý wulee
             self.wulee.set_message(message)
@@ -338,28 +336,23 @@ class Ui_MainWindow(object):
         elif self.is_key_set is False:
             self.show_popup('Warning','Key is null')
         else:
-            max_len, okPressed = QInputDialog.getInt(None, "Get length",f"Message's length (maximum: {self.total_char_hidden})", self.total_char_hidden, 0, self.total_char_hidden, 1)
-            if okPressed:
-                self.nofiticate("Begin to retrieve")
+            # max_len, okPressed = QInputDialog.getInt(None, "Get length",f"Message's length (maximum: {self.total_char_hidden})", self.total_char_hidden, 0, self.total_char_hidden, 1)
+            # if okPressed:
+            self.nofiticate("Begin to retrieve")
 
-                self.wulee.set_retrieve_max(max_len)
-                self.wulee.retrieve()
-                self.wulee.set_key_to_null()
-                self.reset_password_message()
-                
-                _translate = QtCore.QCoreApplication.translate
-                secret_msg = self.wulee.retrieve_message
-                self._message.setText(_translate("MainWindow", secret_msg))
-                
-                self.wulee.reset_when_retrieve_done()
-                
-                self.nofiticate("Done!")
-                
-                
-        
+            self.wulee.retrieve()
+            self.wulee.set_key_to_null()
+            self.reset_password_message()
             
-        
-          
+            _translate = QtCore.QCoreApplication.translate
+            secret_msg = self.wulee.retrieve_message
+            self._message.setText(_translate("MainWindow", secret_msg))
+            
+            self.wulee.reset_when_retrieve_done()
+            
+            self.nofiticate("Done!")
+                
+                
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

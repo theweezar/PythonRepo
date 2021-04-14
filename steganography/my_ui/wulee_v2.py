@@ -23,8 +23,10 @@ class WuleeLastestVersion:
     self.hidden_count = 0   # số tin đã giấu 
     self.retrieve_message = "" # tin nhắn đã trích xuất
     self.retrieve_bin = ""
+    self.retrieve_bin_temp = ""
     self.retrieve_count = 0    # số tin nhắn đã trích xuất
-    self.retrieve_max = 0      # số tin trích xuất tối đa
+    self.retrieve_max = -1      # số tin trích xuất tối đa
+    self.retrieve_done = False
     self.CHANNEL_BLUE = 0      
     self.CHANNEL_GREEN = 1
     self.CHANNEL_RED = 2
@@ -67,7 +69,7 @@ class WuleeLastestVersion:
   
   # Các thao tác với biến -------------------------------
   def set_message(self, message):
-    self.message = message
+    self.message = f"{len(message)}:{message}"
     for c in self.message:
       self.bin_message += '{0:08b}'.format(ord(c))
 
@@ -80,17 +82,20 @@ class WuleeLastestVersion:
   def save_stego_image(self, file_name):
     cv2.imwrite(file_name, self.cover_image)
 
-  def set_retrieve_max(self, retrieve_max):
-    self.retrieve_max = retrieve_max * 8
+  # def set_retrieve_max(self, retrieve_max):
+  #   self.retrieve_max = retrieve_max * 8
 
   def reset_when_hide_done(self):
     self.message = ""
+    self.bin_message = ""
     self.hidden_count = 0
 
   def reset_when_retrieve_done(self):
     self.retrieve_count = 0
-    self.retrieve_max = 0
+    self.retrieve_max = -1
     self.retrieve_message = ""
+    self.retrieve_bin = ""
+    self.retrieve_bin_temp = ""
 
   def get_cover_image_height(self):
     return self.cover_image.shape[0]
@@ -219,26 +224,27 @@ Image width: {self.get_cover_image_width()}"""
     self.retrieve_in_channel(self.CHANNEL_BLUE)
     self.retrieve_in_channel(self.CHANNEL_GREEN)
     self.retrieve_in_channel(self.CHANNEL_RED)
-    self.bin_retrieve_to_string()
-
+    # self.bin_retrieve_to_string()
+    self.retrieve_message = self.retrieve_message[1:]
 
   def retrieve_in_channel(self, channel):
+    if self.retrieve_done is True:
+      return
     # Trích xuất Channel
     img_channel = self.cover_image[:,:,channel]
     # Duyệt hết ảnh
     # Duyệt theo chiều cao ( height ) khóa
-    for i in range(0, self.get_cover_image_height(), self.block_height) :  
+    for i in range(0, self.get_cover_image_height(), self.block_height) :
+      if self.retrieve_count == self.retrieve_max:
+        return
       for j in range(0, self.get_cover_image_width()) :
         block_int = img_channel[i:i+self.block_height, j]
-        
         if self.retrieve_count == self.retrieve_max:
           return
-        
         # Đặt ra giới hạn cho những block có kích thước không đủ
         if block_int.shape[0] == self.block_height:
           block_int = self.retrieve_in_block_int(block_int, j)
           
-
   def retrieve_in_block_int(self, block_int, pos):
 
     fi_bin = self.fi_int_to_binary(block_int)
@@ -249,10 +255,24 @@ Image width: {self.get_cover_image_width()}"""
 
     if xor_sum > 0 and xor_sum < key_sum:
       if xor_sum % 2 == 0:
-        self.retrieve_bin += "0"
+        self.retrieve_bin_temp += "0"
       else:
-        self.retrieve_bin += "1"
-      self.retrieve_count += 1
+        self.retrieve_bin_temp += "1"
+      # self.retrieve_count += 1
+      if len(self.retrieve_bin_temp) == 8:
+        _ascii = int(self.retrieve_bin_temp, 2)
+        if _ascii >= 32 and _ascii <= 126:
+          if _ascii == 58 and self.retrieve_max == -1:
+            self.retrieve_max = int(self.retrieve_message) + 1
+            self.retrieve_message = ""
+          if self.retrieve_max > 0:
+            self.retrieve_count += 1
+          self.retrieve_message += chr(_ascii)
+          self.retrieve_bin += self.retrieve_bin_temp
+          self.retrieve_bin_temp = ""
+        else:
+          self.retrieve_done = True
+
       print('xor_sum:',xor_sum,'| Vị trí đúng:',pos)
     else:
       print('xor_sum:',xor_sum,'| Vị trí ko đúng:',pos)
@@ -264,15 +284,15 @@ Image width: {self.get_cover_image_width()}"""
 
   
 
-# my_msg = "phan dai, duong truc dong"
-# wulee = WuleeLastestVersion()
-# wulee.set_key('minhduc')
-# wulee.set_cover_image('cat.jpeg')
-# wulee.set_message(my_msg)
-# wulee.hide()
+my_msg = "phan dai, duong truc dong"
+wulee = WuleeLastestVersion()
+wulee.set_key('minhduc')
+wulee.set_cover_image('cat.jpeg')
+wulee.set_message(my_msg)
+wulee.hide()
 # wulee.set_retrieve_max(len(my_msg))
-# wulee.retrieve()
-# wulee.compare_test()
+wulee.retrieve()
+wulee.compare_test()
 # a = wulee.fi_int_to_binary([ord('a')])
 # print(a)
 # b = wulee.fi_binary_to_int(a)
