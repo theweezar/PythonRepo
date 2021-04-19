@@ -235,11 +235,11 @@ Image width: {self.get_cover_image_width()}"""
     # Duyệt hết ảnh
     # Duyệt theo chiều cao ( height ) khóa
     for i in range(0, self.get_cover_image_height(), self.block_height) :
-      if self.retrieve_count == self.retrieve_max:
+      if self.retrieve_count == self.retrieve_max or self.retrieve_done is True:
         return
       for j in range(0, self.get_cover_image_width()) :
         block_int = img_channel[i:i+self.block_height, j]
-        if self.retrieve_count == self.retrieve_max:
+        if self.retrieve_count == self.retrieve_max or self.retrieve_done is True:
           return
         # Đặt ra giới hạn cho những block có kích thước không đủ
         if block_int.shape[0] == self.block_height:
@@ -258,10 +258,12 @@ Image width: {self.get_cover_image_width()}"""
         self.retrieve_bin_temp += "0"
       else:
         self.retrieve_bin_temp += "1"
-      # self.retrieve_count += 1
+      
       if len(self.retrieve_bin_temp) == 8:
         _ascii = int(self.retrieve_bin_temp, 2)
-        if _ascii >= 32 and _ascii <= 126:
+        print(_ascii)
+        # exit(1)
+        if _ascii >= 32 and _ascii <= 126 or _ascii == 10:
           if _ascii == 58 and self.retrieve_max == -1:
             self.retrieve_max = int(self.retrieve_message) + 1
             self.retrieve_message = ""
@@ -291,6 +293,7 @@ wulee.set_cover_image('cat.jpeg')
 wulee.set_message(my_msg)
 wulee.hide()
 # wulee.set_retrieve_max(len(my_msg))
+# wulee.set_key('ducminh')
 wulee.retrieve()
 wulee.compare_test()
 # a = wulee.fi_int_to_binary([ord('a')])
